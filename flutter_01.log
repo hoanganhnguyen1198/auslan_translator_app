@@ -1,0 +1,96 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run --machine --start-paused -d chrome --devtools-server-address http://127.0.0.1:9100/ --target /Users/yunqi/Desktop/csit998_capstone_g16-main/lib/main.dart
+
+## exception
+
+HttpException: HttpException: Connection closed before full header was received, uri = http://localhost:49716/json
+
+```
+```
+
+## flutter doctor
+
+```
+[!] Flutter (Channel stable, 3.24.0, on macOS 14.5 23F79 darwin-arm64, locale en-AU)
+    • Flutter version 3.24.0 on channel stable at /Users/yunqi/Desktop/flutter
+    ! The flutter binary is not on your path. Consider adding /Users/yunqi/Desktop/flutter/bin to your path.
+    ! The dart binary is not on your path. Consider adding /Users/yunqi/Desktop/flutter/bin to your path.
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision 80c2e84975 (3 weeks ago), 2024-07-30 23:06:49 +0700
+    • Engine revision b8800d88be
+    • Dart version 3.5.0
+    • DevTools version 2.37.2
+    • If those were intentional, you can disregard the above warnings; however it is recommended to use "git" directly to perform update checks and upgrades.
+
+[✗] Android toolchain - develop for Android devices
+    • Android SDK at /Users/yunqi/Library/Android/sdk
+    ✗ cmdline-tools component is missing
+      Run `path/to/sdkmanager --install "cmdline-tools;latest"`
+      See https://developer.android.com/studio/command-line for more details.
+
+[!] Xcode - develop for iOS and macOS (Xcode 15.4)
+    • Xcode at /Applications/Xcode.app/Contents/Developer
+    • Build 15F31d
+    ✗ CocoaPods not installed.
+        CocoaPods is a package manager for iOS or macOS platform code.
+        Without CocoaPods, plugins will not work on iOS or macOS.
+        For more info, see https://flutter.dev/to/platform-plugins
+      For installation instructions, see https://guides.cocoapods.org/using/getting-started.html#installation
+
+[✓] Chrome - develop for the web
+    • Chrome at /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+[✓] Android Studio (version 2024.1)
+    • Android Studio at /Applications/Android Studio.app/Contents
+    • Flutter plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/9212-flutter
+    • Dart plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/6351-dart
+    • Java version OpenJDK Runtime Environment (build 17.0.11+0-17.0.11b1207.24-11852314)
+
+[✓] VS Code (version 1.83.1)
+    • VS Code at /Users/yunqi/Downloads/Visual Studio Code.app/Contents
+    • Flutter extension version 3.94.0
+
+[✓] VS Code (version 1.87.2)
+    • VS Code at /Users/yunqi/Downloads/Visual Studio Code 2.app/Contents
+    • Flutter extension version 3.94.0
+
+[✓] VS Code (version 1.91.1)
+    • VS Code at /Users/yunqi/Downloads/Visual Studio Code 7.app/Contents
+    • Flutter extension version 3.94.0
+
+[✓] VS Code (version 1.89.1)
+    • VS Code at /Users/yunqi/Downloads/Visual Studio Code 3.app/Contents
+    • Flutter extension version 3.94.0
+
+[✓] VS Code (version 1.90.1)
+    • VS Code at /Users/yunqi/Downloads/Visual Studio Code 4.app/Contents
+    • Flutter extension version 3.94.0
+
+[✓] VS Code (version 1.91.0)
+    • VS Code at /Users/yunqi/Downloads/Visual Studio Code 6.app/Contents
+    • Flutter extension version 3.94.0
+
+[✓] VS Code (version 1.90.2)
+    • VS Code at /Users/yunqi/Downloads/Visual Studio Code 5.app/Contents
+    • Flutter extension version 3.94.0
+
+[✓] VS Code (version 1.91.1)
+    • VS Code at /Users/yunqi/Downloads/Visual Studio Code 8.app/Contents
+    • Flutter extension version 3.94.0
+
+[✓] Connected device (3 available)
+    • macOS (desktop)                 • macos                 • darwin-arm64   • macOS 14.5 23F79 darwin-arm64
+    • Mac Designed for iPad (desktop) • mac-designed-for-ipad • darwin         • macOS 14.5 23F79 darwin-arm64
+    • Chrome (web)                    • chrome                • web-javascript • Google Chrome 127.0.6533.120
+
+[✓] Network resources
+    • All expected network resources are available.
+
+! Doctor found issues in 3 categories.
+```
