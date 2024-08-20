@@ -1,0 +1,1 @@
+ /Users/yunqi/Desktop/csit998_capstone_g16-main/.dart_tool/flutter_build/2af8b8cd98eee6c8ed911af3de466f6b/native_assets.yaml: 
