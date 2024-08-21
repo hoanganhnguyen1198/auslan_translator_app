@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:csit998_capstone_g16/utils/colors.dart';
 
 class LoginScreen extends StatefulWidget {
  const LoginScreen({super.key});
@@ -29,8 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color rgbColor = Color.fromARGB(255, 205, 183, 152);
-    Color rgbColor2 = Color.fromARGB(255, 150, 157, 109);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -40,10 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
         title: Text('Login'),
-        backgroundColor: rgbColor,
+        backgroundColor: bgColor,
       ),
       body: Container(
-        color: rgbColor,
+        color: bgColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       labelText: 'Username',
                       border: OutlineInputBorder(),
                       filled: true,
-                      fillColor: rgbColor2,
+                      fillColor: tfColor,
                     ),
                   ),
                 ],
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       labelText: 'Password',
                       border: OutlineInputBorder(),
                       filled: true,
-                      fillColor: rgbColor2,
+                      fillColor: tfColor,
                     ),
                   ),
                 ],
