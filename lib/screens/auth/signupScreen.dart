@@ -29,8 +29,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color rgbColor1 = Color.fromARGB(255, 205, 183, 152);
-    Color rgbColor2 = Color.fromARGB(255, 150, 157, 109);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,10 +39,10 @@ class _SignupScreenState extends State<SignupScreen> {
           },
         ),
         title: Text('Sign Up'),
-        backgroundColor: rgbColor1,
+        backgroundColor: bgColor,
       ),
       body: Container(
-        color: rgbColor1,
+        color: bgColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -79,7 +77,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       labelText: 'Username',
                       border: OutlineInputBorder(),
                       filled: true,
-                      fillColor: rgbColor2,
+                      fillColor: tfColor,
                     ),
                   ),
                 ],
@@ -107,7 +105,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       labelText: 'Email',
                       border: OutlineInputBorder(),
                       filled: true,
-                      fillColor: rgbColor2,
+                      fillColor: tfColor,
                     ),
                   ),
                 ],
@@ -136,7 +134,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       labelText: 'Password',
                       border: OutlineInputBorder(),
                       filled: true,
-                      fillColor: rgbColor2,
+                      fillColor: tfColor,
                     ),
                   ),
                 ],
