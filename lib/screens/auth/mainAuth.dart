@@ -1,4 +1,5 @@
 import 'package:csit998_capstone_g16/screens/auth/login.dart';
+import 'package:csit998_capstone_g16/screens/mainScreen/mainScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -52,8 +53,8 @@ class MainAuthScreen extends StatelessWidget {
             ),
             GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => MainHomeScreen()));
                 },
                 child: Text("Already have an account? Log in"))
           ],
