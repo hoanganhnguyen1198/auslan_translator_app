@@ -22,7 +22,7 @@ class SearchResultPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: 62),
+                SizedBox(height: 62), // 箭头距离顶部的高度
                 Row(
                   children: [
                     GestureDetector(
@@ -33,7 +33,7 @@ class SearchResultPage extends StatelessWidget {
                         height: 24,
                       ),
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 10),
                     Text(
                       word,
                       style: TextStyle(
