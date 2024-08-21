@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const bgColor = Color(0xffCDB798);
+const tfColor = Color.fromARGB(255, 150, 157, 109);
 // const customGreen = Color(0xffcdf465);
 // const lightGrey = Color(0xFFDDDDDD);
 // const lightGreyColor = Color(0xFF959CA7);
