@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'search_result.dart'; // 确保正确导入 search_result.dart
+import 'search_result.dart';
+import 'package:video_player/video_player.dart';
 
 class LibraryListScreen extends StatelessWidget {
   final String category;
@@ -55,11 +56,16 @@ class LibraryListScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SearchResultPage(
-                                      word: word,
-                                      videoLinks: [], // 需要从数据源获取
-                                      definitions: [], // 需要从数据源获取
-                                    )),
+                              builder: (context) => SearchResultPage(
+                                word: word,
+                                videoLinks: [
+                                  'https://object-store.rc.nectar.org.au/v1/AUTH_92e2f9b70316412697cddc6f3ac0ee4e/staticauslanorgau/auslan/34/34820.mp4'
+                                ], // 传递视频链接
+                                definitions: [
+                                  'The organ inside your body where food is digested; or the front part of your body below your waist. English = stomach, belly. Informal English = tummy. Medical or scientific English = abdomen.'
+                                ], // 传递定义
+                              ),
+                            ),
                           );
                         },
                         child: Text(word),
