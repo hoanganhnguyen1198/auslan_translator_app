@@ -54,20 +54,7 @@ class LibraryListScreen extends StatelessWidget {
                           minimumSize: Size(double.infinity, 50),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SearchResultPage(
-                                word: word,
-                                videoLinks: [
-                                  'https://object-store.rc.nectar.org.au/v1/AUTH_92e2f9b70316412697cddc6f3ac0ee4e/staticauslanorgau/auslan/34/34820.mp4'
-                                ], // 传递视频链接
-                                definitions: [
-                                  'The organ inside your body where food is digested; or the front part of your body below your waist. English = stomach, belly. Informal English = tummy. Medical or scientific English = abdomen.'
-                                ], // 传递定义
-                              ),
-                            ),
-                          );
+                          _navigateToSearchResult(context, word);
                         },
                         child: Text(word),
                       ),
@@ -80,4 +67,37 @@ class LibraryListScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _navigateToSearchResult(BuildContext context, String word) async {
+    // 加载data.json数据
+    final libraryData = await LibraryData.loadLibraryData();
+    // 根据点击的单词找到相关的视频链接和定义
+    final wordData = libraryData.data.firstWhere(
+      (entry) => entry['entry_in_english'] == word,
+      orElse: () => null,
+    );
+
+    if (wordData != null) {
+      final firstSubEntry = wordData['sub_entries'][0];
+      final videoLink = firstSubEntry['video_links'][0];
+      final definition = firstSubEntry['definitions'].values.first[0];
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SearchResultPage(
+            word: word,
+            videoLinks: [videoLink], // 从JSON数据中获取的视频链接
+            definitions: [definition], // 从JSON数据中获取的定义
+          ),
+        ),
+      );
+    } else {
+      // 处理没有找到相关数据的情况
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No data found for $word')),
+      );
+    }
+  }
 }
+
