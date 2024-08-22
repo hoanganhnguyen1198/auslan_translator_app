@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'library_list.dart';
+import '../data/data_repository.dart';
 
 class AuslanLibraryScreen extends StatefulWidget {
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import '../data/data_repository.dart';
 
 class SearchResultPage extends StatefulWidget {
   final String word;
