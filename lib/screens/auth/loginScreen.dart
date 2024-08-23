@@ -131,8 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
             TextButton(
               onPressed: () {
-                  // Handle forgot password action
-                  // Navigate to the reset password page or show a dialog
+                  Navigator.pushNamed(context, '/reset');
               },
               child: Text(
                 'Forgot your password?',

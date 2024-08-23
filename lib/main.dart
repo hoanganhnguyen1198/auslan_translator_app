@@ -1,3 +1,4 @@
+import 'package:csit998_capstone_g16/screens/auth/PasswordRecoveryScreen.dart';
 import 'package:csit998_capstone_g16/screens/auth/mainAuth.dart';
 import 'package:csit998_capstone_g16/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
             '/': (context) => const MainAuthScreen(),
             '/login': (context) => const LoginScreen(),
             '/signup': (context) => SignupScreen(),
+            '/reset': (context) => PasswordRecoveryScreen(), 
           },
           initialRoute: '/'
         );

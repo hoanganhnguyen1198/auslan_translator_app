@@ -47,16 +47,16 @@ class MainAuthScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/signup');
+                  Navigator.pushNamed(context, '/login');
                 },
-                child: const Text('Sign up with email'),
+                child: const Text('Log in'),
               ),
             ),
             GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/login');
+                  Navigator.pushNamed(context, '/signup');
                 },
-                child: Text("Already have an account? Log in"))
+                child: Text("Without an account? Sign up"))
           ],
         ),
       ),
