@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:csit998_capstone_g16/utils/colors.dart';
+import 'package:csit998_capstone_g16/screens/mainScreen/mainScreen.dart';
 
 class LoginScreen extends StatefulWidget {
  const LoginScreen({super.key});
@@ -20,6 +21,10 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_usernameController.text == storedUsername && _passwordController.text == storedPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login successful!')),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
