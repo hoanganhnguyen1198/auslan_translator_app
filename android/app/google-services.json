@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "911155744021",
+    "project_id": "auslan-sign-language",
+    "storage_bucket": "auslan-sign-language.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911155744021:android:95c86c622ec00b558f2d1c",
+        "android_client_info": {
+          "package_name": "com.auslan.translator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3b7D3zQymrnSYOA7ylWerSW2dnrw2k0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
