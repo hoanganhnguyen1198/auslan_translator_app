@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'search_result.dart';
 import 'package:video_player/video_player.dart';
-import '../data/data_repository.dart';
 
-class LibraryListScreen extends StatelessWidget {
+class LibraryListScreen extends StatefulWidget {
   final String category;
-  final List<dynamic> words; // 假设每个词汇是一个字符串
+  final List<dynamic> words;
 
   LibraryListScreen({required this.category, required this.words});
+
+  @override
+  _LibraryListScreenState createState() => _LibraryListScreenState();
+}
+
+class _LibraryListScreenState extends State<LibraryListScreen> {
+  int _currentIndex = 2; // 将初始索引设置为2，即Library项
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,7 @@ class LibraryListScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: 62), // 箭头距离顶部的高度
+                SizedBox(height: 62),
                 Row(
                   children: [
                     GestureDetector(
@@ -34,14 +40,14 @@ class LibraryListScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 64), // 箭头和种类名称之间的距离
                 Text(
-                  category,
+                  widget.category,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 20),
-                ...words.map((word) => Padding(
+                ...widget.words.map((word) => Padding(
                       padding: const EdgeInsets.only(bottom: 12.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -54,7 +60,20 @@ class LibraryListScreen extends StatelessWidget {
                           minimumSize: Size(double.infinity, 50),
                         ),
                         onPressed: () {
-                          _navigateToSearchResult(context, word);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchResultPage(
+                                word: word,
+                                videoLinks: [
+                                  'https://object-store.rc.nectar.org.au/v1/AUTH_92e2f9b70316412697cddc6f3ac0ee4e/staticauslanorgau/auslan/34/34820.mp4'
+                                ],
+                                definitions: [
+                                  'The organ inside your body where food is digested; or the front part of your body below your waist. English = stomach, belly. Informal English = tummy. Medical or scientific English = abdomen.'
+                                ],
+                              ),
+                            ),
+                          );
                         },
                         child: Text(word),
                       ),
@@ -65,39 +84,40 @@ class LibraryListScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  void _navigateToSearchResult(BuildContext context, String word) async {
-    // 加载data.json数据
-    final libraryData = await LibraryData.loadLibraryData();
-    // 根据点击的单词找到相关的视频链接和定义
-    final wordData = libraryData.data.firstWhere(
-      (entry) => entry['entry_in_english'] == word,
-      orElse: () => null,
-    );
-
-    if (wordData != null) {
-      final firstSubEntry = wordData['sub_entries'][0];
-      final videoLink = firstSubEntry['video_links'][0];
-      final definition = firstSubEntry['definitions'].values.first[0];
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SearchResultPage(
-            word: word,
-            videoLinks: [videoLink], // 从JSON数据中获取的视频链接
-            definitions: [definition], // 从JSON数据中获取的定义
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+            if (index == 0) {
+              Navigator.pushReplacementNamed(context, '/home');
+            } else if (index == 1) {
+              Navigator.pushReplacementNamed(context, '/search');
+            } else if (index == 2) {
+            } else if (index == 3) {
+              Navigator.pushReplacementNamed(context, '/profile');
+            }
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Auslan To Text',
           ),
-        ),
-      );
-    } else {
-      // 处理没有找到相关数据的情况
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No data found for $word')),
-      );
-    }
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.library_books),
+            label: 'Library',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
   }
 }
-

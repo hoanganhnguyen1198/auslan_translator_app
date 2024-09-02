@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'library_list.dart';
-import '../data/data_repository.dart';
 
 class AuslanLibraryScreen extends StatefulWidget {
   @override
@@ -11,6 +10,7 @@ class AuslanLibraryScreen extends StatefulWidget {
 
 class _AuslanLibraryScreenState extends State<AuslanLibraryScreen> {
   Map<String, dynamic> categories = {};
+  int _currentIndex = 2;
 
   @override
   void initState() {
@@ -77,6 +77,32 @@ class _AuslanLibraryScreenState extends State<AuslanLibraryScreen> {
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Auslan To Text',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.library_books),
+            label: 'Library',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }

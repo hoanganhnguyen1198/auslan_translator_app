@@ -10,6 +10,11 @@ class MyApp extends StatelessWidget {
       title: 'Auslan Library',
       theme: ThemeData(
         scaffoldBackgroundColor: Color(0xFFCDB798),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFF4E7227),
+          selectedItemColor: Color(0xFFF2F2F2),
+          type: BottomNavigationBarType.fixed,
+        ),
       ),
       home: AuslanLibraryScreen(),
     );
