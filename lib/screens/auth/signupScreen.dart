@@ -1,3 +1,5 @@
+// import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
+
 import 'package:flutter/material.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'package:csit998_capstone_g16/utils/colors.dart';  
@@ -20,27 +22,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _signUp() async {
-    try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      // store username and other user info
-      await _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'username': _usernameController.text.trim(),
-        'email': _emailController.text.trim(),
-        // add other user info here if applicable
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration successful!')),
-      );
-      Navigator.pushNamed(context, '/login');
-      // Perform further actions, such as navigation
-    } on FirebaseAuthException catch (e) {
-       print('Failed to register user: ${e.message}');
-    } catch (e) {
-       print('An error occurred: ${e.toString()}');
-    }
+    print("sign up");
+    FirebaseAuth.instance
+      .createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text)
+      .then((value) {
+        print("Created New Account");
+        Navigator.pushNamed(context, '/login');
+    }).onError((error, stackTrace) {
+        print("Error ${error.toString()}");
+    });
   }
     
 @override
@@ -101,14 +93,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(height: 32),
               ElevatedButton(
-                onPressed: () {
-                  _signUp;
-                  Navigator.pushNamed(context, '/login');
-                },
-                child: Text('Sign Up'),
+                // onPressed: () {
+                //   // _signUp();
+                //   Navigator.pushNamed(context, '/login');
+                // },
+                onPressed: _signUp,
                 style: ElevatedButton.styleFrom(
                   //style
                 ),
+                child: Text('Sign Up'),
               ),
               TextButton(
                 onPressed: () {
