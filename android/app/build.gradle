@@ -27,6 +27,14 @@ android {
     namespace = "com.example.csit998_capstone_g16"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    
+    aaptOptions {
+        noCompress 'tflite'
+        noCompress 'lite'
+    }
+
+
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -45,6 +53,13 @@ android {
         versionName = flutterVersionName
     }
 
+    dependencies {
+        implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:2.10.0'
+        implementation 'org.tensorflow:tensorflow-lite:2.10.0'
+        // Other dependencies
+    }
+
+    
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

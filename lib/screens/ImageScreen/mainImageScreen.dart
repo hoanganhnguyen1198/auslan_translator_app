@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
-// import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:image/image.dart' as img;
 
 class ImageScreen extends StatefulWidget {
   const ImageScreen({super.key});
@@ -28,7 +28,15 @@ class _ImageScreenState extends State<ImageScreen> {
 
   Future<void> _loadModel() async {
     try {
-      _interpreter = await Interpreter.fromAsset('model.tflite');
+      final options = InterpreterOptions();
+
+      // Example of adding a delegate, if needed:
+      // options.addDelegate(GpuDelegate());
+
+      _interpreter = await Interpreter.fromAsset(
+        'assets/tensorflowModel/model.tflite',
+        options: options,
+      );
     } catch (e) {
       print("Error loading model: $e");
     }
@@ -51,23 +59,39 @@ class _ImageScreenState extends State<ImageScreen> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
-        _predictImage(_image!);
+
+        // Debugging: Print file path and check if file exists
+        print("Image file path: ${_image!.path}");
+        if (File(_image!.path).existsSync()) {
+          print("Image file exists.");
+          _predictImage(_image!);
+        } else {
+          print("Image file does not exist.");
+        }
       });
+    } else {
+      print("No image selected.");
     }
   }
 
   Future<void> _predictImage(File imageFile) async {
     try {
-      // Load and preprocess the image
       final image = await _loadImage(imageFile);
       final input = imageToByteListFloat32(
           image, 224, 224); // Adjust size as per model input
-      final output =
-          List.filled(1 * 1000, 0).reshape([1, 1000]); // Adjust output size
 
-      _interpreter.run(input, output);
+      // Reshape input to [1, height, width, channels]
+      final inputTensor = input.reshape([1, 224, 224, 3]);
 
-      // Process results
+      // Define output tensor with the correct shape
+      final output = List.filled(1 * 29, 0.0)
+          .reshape([1, 29]); // Adjust output size to match the model's output
+
+      print(output);
+
+      // Run the model
+      _interpreter.run(inputTensor, output);
+      print(output);
       setState(() {
         _result = 'Prediction: ${output[0]}'; // Process output as needed
       });
@@ -77,19 +101,36 @@ class _ImageScreenState extends State<ImageScreen> {
   }
 
   Future<Uint8List> _loadImage(File file) async {
-    // Load image file into Uint8List
-    final data = await file.readAsBytes();
-    return data;
+    try {
+      final bytes = await file.readAsBytes();
+      print("Image loaded successfully. Byte length: ${bytes.length}");
+      return bytes;
+    } catch (e) {
+      print("Error loading image: $e");
+      rethrow; // Re-throw the exception to handle it elsewhere if needed
+    }
   }
 
-  Future<List> imageToByteListFloat32(
-      Uint8List image, int width, int height) async {
-    final input =
-        List.filled(width * height * 3, 0.0).reshape([height, width, 3]);
+  Float32List imageToByteListFloat32(Uint8List image, int width, int height) {
+    final imgImage = img.decodeImage(image)!;
+    final resizedImage = img.copyResize(imgImage, width: width, height: height);
 
-    // Convert image to byte list
-    // Implementation depends on your image format and preprocessing needs
-    // You can use image package to convert image to raw bytes
+    final input =
+        Float32List(1 * height * width * 3); // Ensure this is Float32List
+
+    int index = 0;
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        final pixel = resizedImage.getPixel(x, y);
+        final r = (img.getRed(pixel) / 255.0).toDouble();
+        final g = (img.getGreen(pixel) / 255.0).toDouble();
+        final b = (img.getBlue(pixel) / 255.0).toDouble();
+
+        input[index++] = r;
+        input[index++] = g;
+        input[index++] = b;
+      }
+    }
 
     return input;
   }
@@ -123,24 +164,28 @@ class _ImageScreenState extends State<ImageScreen> {
     return SafeArea(
       child: Scaffold(
         body: _image != null
-            ? Column(
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: 50.h,
-                      width: 50.w,
-                      child: _image == null
-                          ? const Text('No Image selected')
-                          : Image.file(_image!),
+            ? SingleChildScrollView(
+                // Add scroll functionality
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        height: 50.h,
+                        width: 50.w,
+                        child: _image == null
+                            ? const Text('No Image selected')
+                            : Image.file(_image!),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    _result,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
+                    SizedBox(height: 20),
+                    Text(
+                      _result,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
