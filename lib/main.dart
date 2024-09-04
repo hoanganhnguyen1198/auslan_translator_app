@@ -1,22 +1,50 @@
-import 'package:flutter/material.dart';
-import 'screens/library.dart';
+import 'package:csit998_capstone_g16/screens/auth/PasswordRecoveryScreen.dart';
+import 'package:csit998_capstone_g16/screens/auth/mainAuth.dart';
+import 'package:csit998_capstone_g16/screens/auth/signupScreen.dart';
+import 'package:csit998_capstone_g16/screens/auth/loginScreen.dart';
+import 'package:csit998_capstone_g16/screens/library.dart';
+import 'package:csit998_capstone_g16/screens/user.dart';
 
-void main() => runApp(MyApp());
+import 'package:csit998_capstone_g16/utils/colors.dart';
+import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Auslan Library',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFFCDB798),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF4E7227),
-          selectedItemColor: Color(0xFFF2F2F2),
-          type: BottomNavigationBarType.fixed,
-        ),
-      ),
-      home: AuslanLibraryScreen(),
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            scaffoldBackgroundColor: bgColor,
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          routes: {
+            '/': (context) => const MainAuthScreen(),
+            '/login': (context) => const LoginScreen(),
+            '/signup': (context) => SignUpScreen(),
+            '/reset': (context) => PasswordRecoveryScreen(), 
+            '/library': (context) => AuslanLibraryScreen(),
+            '/user': (context) => UserScreen()
+          },
+          initialRoute: '/'
+        );
+      },
     );
   }
 }
+

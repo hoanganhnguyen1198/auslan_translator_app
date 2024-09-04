@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csit998_capstone_g16/screens/mylist.dart';
 import 'library.dart';
 
 class UserScreen extends StatefulWidget {
@@ -42,7 +43,12 @@ class _UserScreenState extends State<UserScreen> {
                 ),
                 SizedBox(height: 44),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                       context,
+                       MaterialPageRoute(builder: (context) => MyListScreen())
+                      );
+                  },
                   child: Text('MY LIST'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF6f8c51).withOpacity(0.6),

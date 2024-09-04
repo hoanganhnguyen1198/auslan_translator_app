@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'library_list.dart';
-import 'user.dart';
 
 class AuslanLibraryScreen extends StatefulWidget {
   @override
@@ -85,11 +84,6 @@ class _AuslanLibraryScreenState extends State<AuslanLibraryScreen> {
           setState(() {
             _currentIndex = index;
           });
-          if (index == 3) {
-            // 假设'Profile'在底部导航的第四个位置
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => UserScreen()));
-          }
         },
         items: [
           BottomNavigationBarItem(

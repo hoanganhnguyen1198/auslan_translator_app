@@ -1,4 +1,3 @@
-import 'package:csit998_capstone_g16/screens/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -46,16 +45,17 @@ class MainAuthScreen extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                onPressed: () {},
-                child: const Text('Sign up with email'),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+                child: const Text('Log in'),
               ),
             ),
             GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const LoginScreen()));
+                  Navigator.pushNamed(context, '/signup');
                 },
-                child: const Text("Already have an account? Log in"))
+                child: Text("Without an account? Sign up"))
           ],
         ),
       ),

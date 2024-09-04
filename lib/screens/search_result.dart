@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../data/data_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SearchResultPage extends StatefulWidget {
   final String word;
@@ -95,7 +97,32 @@ class _SearchResultPageState extends State<SearchResultPage> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    /*
+                    User? user = FirebaseAuth.instance.currentUser;
+
+                    if (user != null) {
+                   // 保存单词到 Firestore 数据库
+                      await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(user.uid)
+                        .collection('savedWords')
+                        .add({
+                          'word': word,
+                          'timestamp': FieldValue.serverTimestamp(),
+                      });
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Word saved to list!')),
+                      );
+                    } else {
+                   // 用户未登录，显示错误消息
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please log in to save words.')),
+                      );
+                    }
+                    */
+                  },
                   child: Text('SAVE TO MY LIST'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF6f8c51).withOpacity(0.6),

@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:911155744021:android:95c86c622ec00b558f2d1c",
+        "mobilesdk_app_id": "1:911155744021:android:9ab49b743517e7b98f2d1c",
         "android_client_info": {
-          "package_name": "com.auslan.translator"
+          "package_name": "com.example.csit998_capstone_g16"
         }
       },
       "oauth_client": [],
