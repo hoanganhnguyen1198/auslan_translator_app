@@ -2,8 +2,9 @@ import 'package:csit998_capstone_g16/screens/auth/PasswordRecoveryScreen.dart';
 import 'package:csit998_capstone_g16/screens/auth/mainAuth.dart';
 import 'package:csit998_capstone_g16/screens/auth/signupScreen.dart';
 import 'package:csit998_capstone_g16/screens/auth/loginScreen.dart';
-import 'package:csit998_capstone_g16/screens/library.dart';
-import 'package:csit998_capstone_g16/screens/user.dart';
+import 'package:csit998_capstone_g16/screens/libraryScreen/library.dart';
+import 'package:csit998_capstone_g16/screens/userScreen/user.dart';
+import 'package:csit998_capstone_g16/screens/userScreen/mylist.dart';
 
 import 'package:csit998_capstone_g16/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
             '/signup': (context) => SignUpScreen(),
             '/reset': (context) => PasswordRecoveryScreen(), 
             '/library': (context) => AuslanLibraryScreen(),
-            '/user': (context) => UserScreen()
+            '/user': (context) => UserScreen(),
+            '/vocabList': (context) => MyListScreen()
           },
           initialRoute: '/'
         );
