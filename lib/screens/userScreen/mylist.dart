@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../libraryScreen/search_result.dart'; 
+import '../libraryScreen/search_result.dart';
 import 'package:video_player/video_player.dart';
 import '../../data/data_repository.dart';
 
@@ -34,15 +34,15 @@ class _MyListScreenState extends State<MyListScreen> {
   }
 
   void navigateToSearchResult(String word) async {
-   final libraryData = await LibraryData.loadLibraryData();
+    final libraryData = await LibraryData.loadLibraryData();
     final wordData = libraryData.data.firstWhere(
-      (entry) => entry['entry_in_english'] == word,
+          (entry) => entry['entry_in_english'] == word,
       orElse: () => null,
     );
 
     if (wordData != null) {
       final firstSubEntry = wordData['sub_entries'][0];
-      final videoLink = firstSubEntry['video_links'][0];  
+      final videoLink = firstSubEntry['video_links'][0];
       final definition = firstSubEntry['definitions'].values.first[0];
 
       Navigator.push(
@@ -50,8 +50,9 @@ class _MyListScreenState extends State<MyListScreen> {
         MaterialPageRoute(
           builder: (context) => SearchResultPage(
             word: word,
-            videoLinks: [videoLink], 
-            definitions: [definition], 
+            videoLinks: [videoLink],
+            definitions: [definition],
+            showSaveButton: false,  // 确保不显示保存按钮
           ),
         ),
       );
@@ -61,22 +62,60 @@ class _MyListScreenState extends State<MyListScreen> {
       );
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Vocabulary List'),
-      ),
-      body: ListView.builder(
-        itemCount: words.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(words[index]),
-            onTap: () => navigateToSearchResult(words[index]), // 添加点击事件
-          );
-        },
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 62),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Image.asset(
+                        'assets/images/arrow.png',
+                        width: 24,
+                        height: 24,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 64),
+                Text(
+                  'My Vocabulary List',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20),
+                ...words.map((word) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF6f8c51).withOpacity(0.6),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 15.0),
+                      minimumSize: Size(double.infinity, 50),
+                    ),
+                    onPressed: () => navigateToSearchResult(word),
+                    child: Text(word),
+                  ),
+                )).toList(),
+                SizedBox(height: 24),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

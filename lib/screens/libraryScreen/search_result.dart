@@ -8,11 +8,13 @@ class SearchResultPage extends StatefulWidget {
   final String word;
   final List<dynamic> videoLinks;
   final List<dynamic> definitions;
+  final bool showSaveButton; // 新增参数控制是否显示保存按钮
 
   SearchResultPage({
     required this.word,
     required this.videoLinks,
     required this.definitions,
+    this.showSaveButton = true, // 默认显示保存按钮
   });
 
   @override
@@ -25,13 +27,11 @@ class _SearchResultPageState extends State<SearchResultPage> {
   Future<void> addWordToVocabList(String word) async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      // request user ID
       String userId = currentUser.uid;
-
       DocumentReference vocabListRef = FirebaseFirestore.instance.collection('vocabLists').doc(userId);
 
-    // create or update vocablist
-     await vocabListRef.set({
+      // create or update vocab list
+      await vocabListRef.set({
         'words': FieldValue.arrayUnion([word]),  // add new word
         'lastUpdated': FieldValue.serverTimestamp()  // update the timestamp
       }, SetOptions(merge: true)).catchError((error) {
@@ -41,7 +41,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
       print("User not logged in");
     }
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -91,7 +91,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black, 
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -116,24 +116,25 @@ class _SearchResultPageState extends State<SearchResultPage> {
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await addWordToVocabList(widget.word);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('${widget.word} added to your vocabulary list'))
-                    );
-                  },
-                  child: Text('SAVE TO MY LIST'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF6f8c51).withOpacity(0.6),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                if (widget.showSaveButton)  // 根据 showSaveButton 参数决定是否显示按钮
+                  ElevatedButton(
+                    onPressed: () async {
+                      await addWordToVocabList(widget.word);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('${widget.word} added to your vocabulary list'))
+                      );
+                    },
+                    child: Text('SAVE TO MY LIST'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF6f8c51).withOpacity(0.6),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 15.0),
+                      minimumSize: Size(double.infinity, 50),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
-                    minimumSize: Size(double.infinity, 50),
                   ),
-                ),
               ],
             ),
           ),
