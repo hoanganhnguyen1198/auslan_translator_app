@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:csit998_capstone_g16/utils/colors.dart';  
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PasswordRecoveryScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
+
+  Future<void> sendPasswordResetEmail(String email, BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password recovery email sent!'))
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to send password recovery email: ${error.toString()}'))
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +47,7 @@ class PasswordRecoveryScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Implement sending recovery email logic here
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Password recovery email sent!')),
-                );
-              },
+              onPressed: () => sendPasswordResetEmail(_emailController.text, context),
               child: Text('Send Recovery Email'),
             ),
           ],
