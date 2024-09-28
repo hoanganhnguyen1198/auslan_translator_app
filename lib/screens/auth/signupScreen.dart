@@ -30,7 +30,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'email': _emailController.text.trim()
       });
 
-      print("Created New Account");
+      if (userCredential.user != null) {
+        await userCredential.user!.sendEmailVerification();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('A verification email has been sent. Please check your email.'))
+        );
+      }
+
       Navigator.pushNamed(context, '/login');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
