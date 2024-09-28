@@ -24,13 +24,29 @@ class _LoginScreenState extends State<LoginScreen> {
         SnackBar(content: Text('Login successful!')),
       );
       Navigator.pushNamed(context, '/user');
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = 'No user found for that email.';
+          break;
+        case 'wrong-password':
+          errorMessage = 'Wrong password.';
+          break;
+        default:
+          errorMessage = 'Failed to login: ${e.message}';
+          break;
+      }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to login: $e')),
+        SnackBar(content: Text(errorMessage)),
+      );
+    } catch (e) {
+      // Handle any other exceptions
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to login due to unexpected error: $e')),
       );
     }
   }
-
   @override
   Widget build(BuildContext context) {
 
