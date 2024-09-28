@@ -68,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Navigator.pop(context);
           },
         ),
-        title: Text('Login'),
+        title: Text('Sign up'),
         backgroundColor: bgColor,
       ),
       body: Container(

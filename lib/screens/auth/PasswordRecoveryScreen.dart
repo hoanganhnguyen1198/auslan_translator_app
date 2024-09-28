@@ -22,7 +22,17 @@ class PasswordRecoveryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recover Password'),
+        leading: IconButton(
+          icon: Image.asset(
+            'assets/images/arrow.png',  // Path to your image asset
+            width: 24,                  // Set the desired width
+            height: 24,                 // Set the desired height
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text('Password Recovery'),
         backgroundColor: bgColor,
       ),
       body: Padding(
@@ -41,6 +51,8 @@ class PasswordRecoveryScreen extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Email',
                 border: OutlineInputBorder(),
+                filled: true,
+                fillColor: tfColor,
                 hintText: 'example@email.com',
               ),
               keyboardType: TextInputType.emailAddress,
