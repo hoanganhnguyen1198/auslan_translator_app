@@ -53,7 +53,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Image.asset(
+            'assets/images/arrow.png',  // Path to your image asset
+            width: 24,                  // Set the desired width
+            height: 24,                 // Set the desired height
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
