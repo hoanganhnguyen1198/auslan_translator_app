@@ -105,6 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
+                  helperText: 'Password must be at least 6 characters long',
                   border: OutlineInputBorder(),
                   filled: true,
                   fillColor: tfColor, 
