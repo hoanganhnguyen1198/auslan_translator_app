@@ -24,9 +24,9 @@ class PasswordRecoveryScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Image.asset(
-            'assets/images/arrow.png',  // Path to your image asset
-            width: 24,                  // Set the desired width
-            height: 24,                 // Set the desired height
+            'assets/images/arrow.png', 
+            width: 24,                 
+            height: 24,          
           ),
           onPressed: () {
             Navigator.pop(context);

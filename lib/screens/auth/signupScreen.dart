@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:csit998_capstone_g16/utils/colors.dart';  
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -20,7 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   
   Future<void> _signUp() async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
@@ -66,9 +67,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: Image.asset(
-            'assets/images/arrow.png',  // Path to your image asset
-            width: 24,                  // Set the desired width
-            height: 24,                 // Set the desired height
+            'assets/images/arrow.png',  
+            width: 24,                 
+            height: 24,                
           ),
           onPressed: () {
             Navigator.pop(context);

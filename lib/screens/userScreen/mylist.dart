@@ -52,7 +52,7 @@ class _MyListScreenState extends State<MyListScreen> {
             word: word,
             videoLinks: [videoLink],
             definitions: [definition],
-            showSaveButton: false,  // 确保不显示保存按钮
+            showSaveButton: false,  
           ),
         ),
       );

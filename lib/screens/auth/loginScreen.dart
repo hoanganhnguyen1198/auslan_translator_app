@@ -41,7 +41,6 @@ class _LoginScreenState extends State<LoginScreen> {
         SnackBar(content: Text(errorMessage)),
       );
     } catch (e) {
-      // Handle any other exceptions
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to login due to unexpected error: $e')),
       );
@@ -54,9 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: Image.asset(
-            'assets/images/arrow.png',  // Path to your image asset
-            width: 24,                  // Set the desired width
-            height: 24,                 // Set the desired height
+            'assets/images/arrow.png',  
+            width: 24,                
+            height: 24,           
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -125,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 8),
                   TextField(
                     controller: _passwordController,
+                    obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       border: OutlineInputBorder(),
@@ -140,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: SizedBox(
-                width: double.infinity, // Make button the same width as TextField
+                width: double.infinity, 
                 child: ElevatedButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
