@@ -31,6 +31,11 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacementNamed(context, '/login');  
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +63,23 @@ class _UserScreenState extends State<UserScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF6f8c51).withOpacity(0.6),
                     foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    minimumSize: Size(double.infinity, 50),
+                  ),
+                ),
+                                SizedBox(height: 16),  // Space between buttons
+                // Sign Out Button
+                ElevatedButton(
+                  onPressed: () {
+                    _signOut();  // Call the sign out function
+                  },
+                  child: Text('SIGN OUT'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white.withOpacity(0.8),  // Different color for sign out
+                    foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
