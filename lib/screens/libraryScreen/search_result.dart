@@ -8,13 +8,13 @@ class SearchResultPage extends StatefulWidget {
   final String word;
   final List<dynamic> videoLinks;
   final List<dynamic> definitions;
-  final bool showSaveButton; // 新增参数控制是否显示保存按钮
+  final bool showSaveButton; 
 
   SearchResultPage({
     required this.word,
     required this.videoLinks,
     required this.definitions,
-    this.showSaveButton = true, // 默认显示保存按钮
+    this.showSaveButton = true,
   });
 
   @override
@@ -116,7 +116,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
-                if (widget.showSaveButton)  // 根据 showSaveButton 参数决定是否显示按钮
+                if (widget.showSaveButton) 
                   ElevatedButton(
                     onPressed: () async {
                       await addWordToVocabList(widget.word);
