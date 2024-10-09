@@ -15,38 +15,37 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  
   @override
   Widget build(BuildContext context) {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            scaffoldBackgroundColor: bgColor,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          routes: {
-            '/': (context) => const MainAuthScreen(),
-            '/login': (context) => const LoginScreen(),
-            '/signup': (context) => SignUpScreen(),
-            '/reset': (context) => PasswordRecoveryScreen(), 
-            '/library': (context) => AuslanLibraryScreen(),
-            '/user': (context) => UserScreen(),
-            '/vocabList': (context) => MyListScreen()
-          },
-          initialRoute: '/'
-        );
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              scaffoldBackgroundColor: bgColor,
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            routes: {
+              '/': (context) => const MainAuthScreen(),
+              '/login': (context) => const LoginScreen(),
+              '/signup': (context) => SignUpScreen(),
+              '/reset': (context) => PasswordRecoveryScreen(),
+              '/library': (context) => AuslanLibraryScreen(),
+              '/user': (context) => UserScreen(),
+              '/vocabList': (context) => MyListScreen()
+            },
+            initialRoute: '/');
       },
     );
   }
 }
-

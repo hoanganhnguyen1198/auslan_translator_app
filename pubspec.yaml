@@ -39,6 +39,11 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.14.0
+  image_picker: ^1.1.2
+  tflite_flutter: ^0.10.4
+  image: ^3.0.1
+  tflite: ^1.1.2
+  # tflite_flutter_helper: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +61,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -68,6 +74,9 @@ flutter:
     - assets/images/bookmark.png
     - assets/categories.json
     - assets/data.json
+    - assets/images/
+    - assets/jsons/
+    - assets/tensorflowModel/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
