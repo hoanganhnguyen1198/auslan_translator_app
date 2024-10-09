@@ -39,34 +39,22 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               _currentIndex = index;
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: Colors.black,
-              ),
+              icon: Icon(Icons.home),
               label: 'Auslan To Text',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
+              icon: Icon(Icons.search),
               label: 'Search',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.settings,
-                color: Colors.black,
-              ),
-              label: 'Settings',
+              icon: Icon(Icons.library_books),
+              label: 'Library',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: Colors.black,
-              ),
-              label: 'Home',
+              icon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
         ),
