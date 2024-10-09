@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/colors.dart';
 import '../ImageScreen/mainImageScreen.dart';
+import '../libraryScreen/library.dart';
 import '../libraryScreen/libraryScreen.dart';
 import '../profileScreen/profileScreen.dart';
 import '../searchScreen/searchScreen.dart';
+import '../userScreen/user.dart';
 
 class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({super.key});
@@ -15,13 +19,36 @@ class MainHomeScreen extends StatefulWidget {
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
   int _currentIndex = 0;
+  String username = "Guest";
 
   final List<Widget> _screens = [
     ImageScreen(),
     SearchScreen(),
-    Libraryscreen(),
-    ProfileScreen(),
+    AuslanLibraryScreen(),
+    UserScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserDetails();
+  }
+
+  void fetchUserDetails() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (userDoc.exists) {
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+        setState(() {
+          username = userData['username'] ?? 'No Name';
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,34 +67,22 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               _currentIndex = index;
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: Colors.black,
-              ),
+              icon: Icon(Icons.home),
               label: 'Auslan To Text',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
+              icon: Icon(Icons.search),
               label: 'Search',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.settings,
-                color: Colors.black,
-              ),
-              label: 'Settings',
+              icon: Icon(Icons.library_books),
+              label: 'Library',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: Colors.black,
-              ),
-              label: 'Home',
+              icon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
         ),

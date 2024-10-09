@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:csit998_capstone_g16/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,6 +56,7 @@ class _ImageScreenState extends State<ImageScreen> {
   }
 
   Future<void> getImageFromGallery() async {
+    Navigator.pop(context);
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
@@ -69,6 +71,7 @@ class _ImageScreenState extends State<ImageScreen> {
   }
 
   Future<void> getImageFromCamera() async {
+    Navigator.pop(context);
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
@@ -103,6 +106,7 @@ class _ImageScreenState extends State<ImageScreen> {
   // }
 
   Future<void> getVideoFromGallery() async {
+    Navigator.pop(context);
     final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
@@ -118,6 +122,7 @@ class _ImageScreenState extends State<ImageScreen> {
   }
 
   Future<void> getVideoFromCamera() async {
+    Navigator.pop(context);
     final pickedFile = await picker.pickVideo(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
@@ -139,7 +144,6 @@ class _ImageScreenState extends State<ImageScreen> {
 
       final inputTensor = input.reshape([1, 224, 224, 3]);
       final output = List.filled(29, 0.0).reshape([1, 29]);
-
       _interpreter.run(inputTensor, output);
 
       final outputList = output[0] as List<double>;
@@ -173,13 +177,11 @@ class _ImageScreenState extends State<ImageScreen> {
         'X',
         'Y',
         'Z',
-        'Space',
+        'del',
         'Nothing',
-        ''
+        'space'
       ];
-
       final predictedLabel = labels[maxIndex];
-
       setState(() {
         _result = 'Prediction: $predictedLabel';
       });
@@ -281,6 +283,140 @@ class _ImageScreenState extends State<ImageScreen> {
     }
 
     return input;
+  }
+
+  void captureFromCamera(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgColor,
+          title: const Text(
+            'Choose an option',
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 80.w,
+                height: 8.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(
+                      height: 1.2,
+                      fontFamily: 'Dubai',
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: getImageFromCamera,
+                  child: const Text('Capture Image'),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: 80.w,
+                height: 8.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(
+                      height: 1.2,
+                      fontFamily: 'Dubai',
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: getVideoFromCamera,
+                  child: const Text('Capture Video'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void uploadFromGallery(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgColor,
+          title: const Text(
+            'Choose an option',
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 80.w,
+                height: 8.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(
+                      height: 1.2,
+                      fontFamily: 'Dubai',
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: getImageFromGallery,
+                  child: const Text('Upload Image'),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: 80.w,
+                height: 8.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(
+                      height: 1.2,
+                      fontFamily: 'Dubai',
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: getVideoFromGallery,
+                  child: const Text('Upload Video'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -406,30 +542,10 @@ class _ImageScreenState extends State<ImageScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        onPressed: getImageFromCamera,
-                        child: const Text('Capture Image'),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      width: 80.w,
-                      height: 8.h,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: const TextStyle(
-                            height: 1.2,
-                            fontFamily: 'Dubai',
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        onPressed: getImageFromGallery,
+                        onPressed: () {
+                          uploadFromGallery(
+                              context); // Use a closure to pass context
+                        },
                         child: const Text('Upload from Gallery'),
                       ),
                     ),
@@ -452,31 +568,10 @@ class _ImageScreenState extends State<ImageScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        onPressed: getVideoFromCamera,
+                        onPressed: () {
+                          captureFromCamera(context);
+                        },
                         child: const Text('Capture Video'),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      width: 80.w,
-                      height: 8.h,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: const TextStyle(
-                            height: 1.2,
-                            fontFamily: 'Dubai',
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        onPressed: getVideoFromGallery,
-                        child: const Text('Upload Video'),
                       ),
                     ),
                   ],

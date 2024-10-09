@@ -78,50 +78,6 @@ class _AuslanLibraryScreenState extends State<AuslanLibraryScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-           switch (index) {
-              case 0:
-                Navigator.pushReplacementNamed(context, '/auslan');
-                break;
-              case 1:
-                Navigator.pushReplacementNamed(context, '/search');
-                break;
-              case 2:
-                Navigator.pushReplacementNamed(context, '/library');
-                break;
-              case 3:
-                Navigator.pushReplacementNamed(context, '/user');
-                break;
-            }
-        },
-        backgroundColor: Colors.black,  
-        selectedItemColor: Colors.blue, 
-        unselectedItemColor: Colors.green, 
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Auslan To Text',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
-            label: 'Library',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-       ],
-     ),
-
     );
   }
 }

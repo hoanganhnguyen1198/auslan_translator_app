@@ -10,7 +10,7 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   int _currentIndex = 3;
-  String username = "Guest"; 
+  String username = "Guest";
 
   @override
   void initState() {
@@ -21,7 +21,10 @@ class _UserScreenState extends State<UserScreen> {
   void fetchUserDetails() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
       if (userDoc.exists) {
         Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
         setState(() {
@@ -33,7 +36,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacementNamed(context, '/login');  
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override
@@ -48,7 +51,7 @@ class _UserScreenState extends State<UserScreen> {
               children: <Widget>[
                 SizedBox(height: 154),
                 Text(
-                  "Hi, $username!",  
+                  "Hi, $username!",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -70,15 +73,16 @@ class _UserScreenState extends State<UserScreen> {
                     minimumSize: Size(double.infinity, 50),
                   ),
                 ),
-                                SizedBox(height: 16),  // Space between buttons
+                SizedBox(height: 16), // Space between buttons
                 // Sign Out Button
                 ElevatedButton(
                   onPressed: () {
-                    _signOut();  // Call the sign out function
+                    _signOut(); // Call the sign out function
                   },
                   child: Text('SIGN OUT'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.8),  // Different color for sign out
+                    backgroundColor: Colors.white
+                        .withOpacity(0.8), // Different color for sign out
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -92,50 +96,6 @@ class _UserScreenState extends State<UserScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-           switch (index) {
-              case 0:
-                Navigator.pushReplacementNamed(context, '/auslan');
-                break;
-              case 1:
-                Navigator.pushReplacementNamed(context, '/search');
-                break;
-              case 2:
-                Navigator.pushReplacementNamed(context, '/library');
-                break;
-              case 3:
-                Navigator.pushReplacementNamed(context, '/user');
-                break;
-            }
-        },
-        backgroundColor: Colors.black,  
-        selectedItemColor: Colors.blue, 
-        unselectedItemColor: Colors.green, 
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Auslan To Text',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
-            label: 'Library',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-       ],
-     ),
-
     );
   }
 }

@@ -13,6 +13,8 @@ import 'package:sizer/sizer.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'screens/mainScreen/mainScreen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -39,6 +41,7 @@ class MyApp extends StatelessWidget {
               '/': (context) => const MainAuthScreen(),
               '/login': (context) => const LoginScreen(),
               '/signup': (context) => SignUpScreen(),
+              '/mainHomeScreen': (context) => MainHomeScreen(),
               '/reset': (context) => PasswordRecoveryScreen(),
               '/library': (context) => AuslanLibraryScreen(),
               '/user': (context) => UserScreen(),
