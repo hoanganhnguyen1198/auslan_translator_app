@@ -4,8 +4,8 @@ import 'package:csit998_capstone_g16/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
- const LoginScreen({super.key});
- @override
+  const LoginScreen({super.key});
+  @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
@@ -20,12 +20,14 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
+      print('Login successful: ${userCredential.user}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login successful!')),
       );
       Navigator.pushNamed(context, '/user');
     } on FirebaseAuthException catch (e) {
       String errorMessage;
+      print('Failed to login: ${e.message}');
       switch (e.code) {
         case 'user-not-found':
           errorMessage = 'No user found for that email.';
@@ -46,16 +48,16 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Image.asset(
-            'assets/images/arrow.png',  
-            width: 24,                
-            height: 24,           
+            'assets/images/arrow.png',
+            width: 24,
+            height: 24,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -79,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-             Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,19 +142,17 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: SizedBox(
-                width: double.infinity, 
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _login,
-                  style: ElevatedButton.styleFrom(
-                  ),
+                  style: ElevatedButton.styleFrom(),
                   child: Text('Log in'),
                 ),
               ),
             ),
-
             TextButton(
               onPressed: () {
-                  Navigator.pushNamed(context, '/reset');
+                Navigator.pushNamed(context, '/reset');
               },
               child: Text(
                 'Forgot your password?',
