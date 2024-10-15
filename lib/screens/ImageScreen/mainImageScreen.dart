@@ -26,7 +26,7 @@ class _ImageScreenState extends State<ImageScreen> {
   String _result = '';
   List<bool> _isSelected = [true, false]; // Initial state for ToggleButtons
   String _modelPath =
-      'assets/tensorflowModel/model.tflite'; // Default model path
+      'assets/tensorflowModel/asl_words_model.tflite'; // Default model path
   String _videoModelPath =
       'assets/tensorflowModel/video_model.tflite'; // Default video model path
 
@@ -440,13 +440,13 @@ class _ImageScreenState extends State<ImageScreen> {
                       // Switch the model based on the selected option
                       if (_isSelected[0]) {
                         _modelPath =
-                            'assets/tensorflowModel/model.tflite'; // Default model
+                            'assets/tensorflowModel/asl_words_model.tflite'; // Default model
                         _videoModelPath =
                             'assets/tensorflowModel/video_model.tflite'; // Video model
                         _loadModel();
                       } else {
                         _modelPath =
-                            'assets/tensorflowModel/auslan_alphabet_classifier_1.tflite'; // New model
+                            'assets/tensorflowModel/auslan_alphabet_model.tflite'; // New model
                         _videoModelPath =
                             'assets/tensorflowModel/new_video_model.tflite'; // New video model
                         _loadModel();
