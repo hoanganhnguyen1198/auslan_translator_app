@@ -98,6 +98,18 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "ffmpeg_kit_flutter",
+      "rootUri": "file:///C:/Users/Niazi/AppData/Local/Pub/Cache/hosted/pub.dev/ffmpeg_kit_flutter-6.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "ffmpeg_kit_flutter_platform_interface",
+      "rootUri": "file:///C:/Users/Niazi/AppData/Local/Pub/Cache/hosted/pub.dev/ffmpeg_kit_flutter_platform_interface-0.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "file_selector_linux",
       "rootUri": "file:///C:/Users/Niazi/AppData/Local/Pub/Cache/hosted/pub.dev/file_selector_linux-0.9.3",
       "packageUri": "lib/",
@@ -386,16 +398,10 @@
       "languageVersion": "3.0"
     },
     {
-      "name": "tflite",
-      "rootUri": "file:///C:/Users/Niazi/AppData/Local/Pub/Cache/hosted/pub.dev/tflite-1.1.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "tflite_flutter",
-      "rootUri": "file:///C:/Users/Niazi/AppData/Local/Pub/Cache/hosted/pub.dev/tflite_flutter-0.10.4",
+      "rootUri": "file:///C:/Users/Niazi/AppData/Local/Pub/Cache/hosted/pub.dev/tflite_flutter-0.11.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.3"
     },
     {
       "name": "typed_data",
@@ -470,7 +476,7 @@
       "languageVersion": "3.4"
     }
   ],
-  "generated": "2024-10-09T04:55:44.645178Z",
+  "generated": "2024-10-20T12:10:38.984501Z",
   "generator": "pub",
   "generatorVersion": "3.4.4",
   "flutterRoot": "file:///C:/flutter",

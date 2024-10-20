@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:csit998_capstone_g16/utils/colors.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,21 +21,37 @@ class ImageScreen extends StatefulWidget {
 class _ImageScreenState extends State<ImageScreen> {
   File? _image;
   File? _video;
+  late int frameCount;
+  late Duration frameInterval;
+  String displayText = "Translate Asl gestures into text instantly.";
   VideoPlayerController? _videoController;
-  final picker = ImagePicker();
+  final ImagePicker picker = ImagePicker();
   late Interpreter _interpreter;
-  late Interpreter _videoInterpreter;
+  late Interpreter? _videoInterpreter; // Change to nullable
   String _result = '';
   List<bool> _isSelected = [true, false]; // Initial state for ToggleButtons
   String _modelPath =
-      'assets/tensorflowModel/asl_words_model.tflite'; // Default model path
+      'assets/tensorflowModel/asl_alphabet_model.tflite'; // Default model path
   String _videoModelPath =
-      'assets/tensorflowModel/video_model.tflite'; // Default video model path
+      'assets/tensorflowModel/asl_words_model.tflite'; // Default video model path
 
   @override
   void initState() {
     super.initState();
-    _loadModel(); // Load the initial model
+    print("Initializing models...");
+    _loadModel().then((_) {
+      print("Main model loaded.");
+      _loadVideoModel().then((_) {
+        print("Video model loading complete.");
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _videoController?.dispose();
+
+    super.dispose();
   }
 
   Future<void> _loadModel() async {
@@ -46,12 +64,15 @@ class _ImageScreenState extends State<ImageScreen> {
   }
 
   Future<void> _loadVideoModel() async {
+    print('Loading video model...');
     try {
       final options = InterpreterOptions();
       _videoInterpreter =
           await Interpreter.fromAsset(_videoModelPath, options: options);
+      print('Video model loaded successfully.');
     } catch (e) {
       print("Error loading video model: $e");
+      _videoInterpreter = null; // Set to null in case of failure
     }
   }
 
@@ -62,9 +83,10 @@ class _ImageScreenState extends State<ImageScreen> {
       setState(() {
         _image = File(pickedFile.path);
         if (_isSelected[0]) {
-          _predictImage(_image!); // Call the prediction function for Model 1
+          _predictASLModel(_image!); // Call the prediction function for Model 1
         } else {
-          _predictNewModel(_image!); // Call the prediction function for Model 2
+          _predictAUSLANModel(
+              _image!); // Call the prediction function for Model 2
         }
       });
     }
@@ -77,33 +99,14 @@ class _ImageScreenState extends State<ImageScreen> {
       setState(() {
         _image = File(pickedFile.path);
         if (_isSelected[0]) {
-          _predictImage(_image!); // Call the prediction function for Model 1
+          _predictASLModel(_image!); // Call the prediction function for Model 1
         } else {
-          _predictNewModel(_image!); // Call the prediction function for Model 2
+          _predictAUSLANModel(
+              _image!); // Call the prediction function for Model 2
         }
       });
     }
   }
-
-  // Future<void> getImageFromGallery() async {
-  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _image = File(pickedFile.path);
-  //       _predictImage(_image!);
-  //     });
-  //   }
-  // }
-
-  // Future<void> getImageFromCamera() async {
-  //   final pickedFile = await picker.pickImage(source: ImageSource.camera);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _image = File(pickedFile.path);
-  //       _predictImage(_image!);
-  //     });
-  //   }
-  // }
 
   Future<void> getVideoFromGallery() async {
     Navigator.pop(context);
@@ -116,72 +119,105 @@ class _ImageScreenState extends State<ImageScreen> {
             setState(() {});
             _videoController!.play();
           });
-        _predictVideo(_video!);
+        if (_isSelected[0]) {
+          _predictASLModelFromVideo(
+              _video!); // Call the prediction function for Model 1
+        } else {
+          _predictAUSLANModelFromVideo(
+              _video!); // Call the prediction function for Model 2
+        }
       });
     }
   }
 
   Future<void> getVideoFromCamera() async {
-    Navigator.pop(context);
-    final pickedFile = await picker.pickVideo(source: ImageSource.camera);
-    if (pickedFile != null) {
-      setState(() {
+    Navigator.pop(context); // Close the overlay if applicable.
+
+    try {
+      final pickedFile = await picker.pickVideo(source: ImageSource.camera);
+
+      if (pickedFile != null) {
         _video = File(pickedFile.path);
+
+        // Initialize video player
         _videoController = VideoPlayerController.file(_video!)
           ..initialize().then((_) {
-            setState(() {});
-            _videoController!.play();
+            setState(() {
+              _videoController!.play(); // Autoplay video after picking
+            });
           });
-        _predictVideo(_video!);
-      });
+        if (_isSelected[0]) {
+          _predictASLModelFromVideo(
+              _video!); // Call the prediction function for Model 1
+        } else {
+          _predictAUSLANModelFromVideo(
+              _video!); // Call the prediction function for Model 2
+        }
+      }
+    } catch (e) {
+      print('Error picking video: $e');
     }
   }
 
-  Future<void> _predictImage(File imageFile) async {
+  Future<void> _predictASLModel(File imageFile) async {
     try {
+      // Load the image and preprocess it into a tensor input
       final image = await _loadImage(imageFile);
       final input = imageToByteListFloat32(image, 224, 224);
 
+      // Reshape the input tensor to match the model's input size
       final inputTensor = input.reshape([1, 224, 224, 3]);
+
+      // Prepare the output tensor with the correct shape and size (29 labels)
       final output = List.filled(29, 0.0).reshape([1, 29]);
+
+      // Run the model inference
       _interpreter.run(inputTensor, output);
 
+      // Extract the output as a list of probabilities
       final outputList = output[0] as List<double>;
+
+      // Get the index of the maximum probability
       final maxIndex =
           outputList.indexOf(outputList.reduce((a, b) => a > b ? a : b));
 
+      // Define the set of labels (29 labels)
       final labels = [
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'M',
+        'space',
         'N',
+        'C',
         'O',
-        'P',
-        'Q',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'X',
-        'Y',
-        'Z',
         'del',
-        'Nothing',
-        'space'
+        'Z',
+        'H',
+        'U',
+        'X',
+        'S',
+        'G',
+        'L',
+        'E',
+        'M',
+        'P',
+        'J',
+        'W',
+        'R',
+        'Y',
+        'Q',
+        'V',
+        'I',
+        'B',
+        'K',
+        'nothing',
+        'F',
+        'A',
+        'T',
+        'D'
       ];
+
+      // Get the predicted label
       final predictedLabel = labels[maxIndex];
+
+      // Update the result on the UI
       setState(() {
         _result = 'Prediction: $predictedLabel';
       });
@@ -190,7 +226,7 @@ class _ImageScreenState extends State<ImageScreen> {
     }
   }
 
-  Future<void> _predictNewModel(File imageFile) async {
+  Future<void> _predictAUSLANModel(File imageFile) async {
     try {
       // Load the image and preprocess it into a tensor input
       final image = await _loadImage(imageFile);
@@ -199,8 +235,8 @@ class _ImageScreenState extends State<ImageScreen> {
       // Reshape the input tensor to match the new model's input size
       final inputTensor = input.reshape([1, 224, 224, 3]);
 
-      // Prepare the output tensor with the correct shape and size (16 labels)
-      final output = List.filled(16, 0.0).reshape([1, 16]);
+      // Prepare the output tensor with the correct shape and size (assumed 22 labels here)
+      final output = List.filled(22, 0.0).reshape([1, 22]);
 
       // Run the model inference
       _interpreter.run(inputTensor, output);
@@ -216,11 +252,16 @@ class _ImageScreenState extends State<ImageScreen> {
       final labels = [
         'r',
         'u',
+        'i',
+        'n',
         'g',
+        't',
         's',
         'a',
         'f',
         'o',
+        'm',
+        'c',
         'd',
         'v',
         'x',
@@ -229,6 +270,7 @@ class _ImageScreenState extends State<ImageScreen> {
         'k',
         'l',
         'y',
+        'p',
         'w'
       ];
 
@@ -244,11 +286,192 @@ class _ImageScreenState extends State<ImageScreen> {
     }
   }
 
-  Future<void> _predictVideo(File videoFile) async {
-    // Implement video prediction logic here
-    print("Processing video: ${videoFile.path}");
-    // Use _videoInterpreter to make predictions
+  Future<void> _predictModelFromVideo(
+      File videoFile, List<String> labels, int labelCount) async {
+    try {
+      print('Starting prediction...');
+
+      // Load video and extract frames
+      await _loadVideo(videoFile);
+
+      // Prepare the output tensor
+      final output = List.filled(labelCount, 0.0).reshape([1, labelCount]);
+      final List<List<double>> allFrameOutputs = [];
+
+      // Extract and process frames
+      for (int i = 0; i < frameCount; i++) {
+        // Seek to the specific frame
+        await _videoController?.seekTo(frameInterval * i);
+        await Future.delayed(
+            const Duration(milliseconds: 100)); // Allow time for the seek
+
+        // Extract the frame and check for success
+        final Uint8List frameData = await _extractFrame(videoFile, i);
+
+        if (frameData.isNotEmpty) {
+          // Preprocess frame and run the interpreter
+          final frameDataProcessed = _preprocessFrame(frameData);
+
+          if (frameDataProcessed.isNotEmpty) {
+            print('here 11111');
+            print(frameDataProcessed.length.toString());
+            print('here 11111');
+
+            _videoInterpreter?.run(frameDataProcessed, output);
+            print("here 1");
+            allFrameOutputs.add(List<double>.from(output[0]));
+          } else {
+            print("Processed frame data is empty for frame $i.");
+          }
+        } else {
+          print("Frame data is empty for frame $i.");
+        }
+      }
+
+      // Check if frames were processed
+      if (allFrameOutputs.isNotEmpty) {
+        print("here 3");
+
+        // Average the probabilities across all frames
+        final averagedOutput = List<double>.generate(labelCount, (i) => 0.0);
+        for (var frameOutput in allFrameOutputs) {
+          for (var i = 0; i < labelCount; i++) {
+            averagedOutput[i] += frameOutput[i];
+          }
+        }
+        for (var i = 0; i < labelCount; i++) {
+          averagedOutput[i] /= allFrameOutputs.length;
+        }
+
+        // Get the label with the maximum probability
+        final maxIndex = averagedOutput
+            .indexOf(averagedOutput.reduce((a, b) => a > b ? a : b));
+        final predictedLabel = labels[maxIndex];
+
+        setState(() {
+          _result = 'Prediction: $predictedLabel';
+        });
+      } else {
+        print("No valid frame outputs for prediction.");
+      }
+    } catch (e) {
+      print("Error during prediction: $e");
+    }
   }
+
+  Future<void> _predictASLModelFromVideo(File videoFile) async {
+    final labels = [
+      'thank you',
+      'goodbye',
+      'sorry',
+      'hello',
+      'no',
+      'help',
+      'yes'
+    ];
+    await _predictModelFromVideo(videoFile, labels, labels.length);
+  }
+
+  Future<void> _predictAUSLANModelFromVideo(File videoFile) async {
+    final labels = [
+      'egg',
+      'use',
+      'do',
+      'jay',
+      'tools',
+      'tool',
+      'pattern',
+      'wool',
+      'map',
+      'wood'
+    ];
+    await _predictModelFromVideo(videoFile, labels, labels.length);
+  }
+
+// Helper function to load the video and extract frames
+  Future<void> _loadVideo(File videoFile) async {
+    _videoController = VideoPlayerController.file(videoFile);
+    await _videoController?.initialize();
+    print('load function');
+
+    // Video duration and frame interval for extraction
+    final duration = _videoController?.value.duration;
+    frameInterval =
+        Duration(milliseconds: 500); // Extract frames every 0.5 seconds
+    frameCount =
+        (duration!.inMilliseconds / frameInterval.inMilliseconds).ceil();
+  }
+
+// Extract a frame using FFmpeg
+  Future<Uint8List> _extractFrame(File videoFile, int frameIndex) async {
+    print("extract function");
+    print('Extracting frame $frameIndex from video ${videoFile.path}');
+
+    final tempDir = Directory.systemTemp;
+    String outputPath = '${tempDir.path}/frame-$frameIndex.png';
+
+    String command =
+        "-i ${videoFile.path} -ss ${frameInterval.inSeconds * frameIndex} -vframes 1 -an $outputPath";
+    print('Executing FFmpeg command: $command');
+
+    final session = await FFmpegKit.execute(command);
+    final returnCode = await session.getReturnCode();
+
+    if (ReturnCode.isSuccess(returnCode)) {
+      print('Frame extracted successfully: $outputPath');
+      Uint8List frameBytes = await File(outputPath).readAsBytes();
+      await File(outputPath).delete(); // Clean up the temporary file
+      return frameBytes;
+    } else {
+      print("Failed to extract frame: Return code: $returnCode");
+      print(await session.getOutput());
+      return Uint8List(0); // Return empty bytes on failure
+    }
+  }
+
+// Preprocess the frame to fit the model's input requirements
+  Uint8List _preprocessFrame(Uint8List frameData) {
+    print('process function');
+
+    img.Image? originalImage = img.decodeImage(frameData);
+
+    if (originalImage == null) {
+      throw Exception("Error decoding the frame.");
+    }
+
+    img.Image resizedImage =
+        img.copyResize(originalImage, width: 224, height: 224);
+    Uint8List inputImage = _imageToByteListUint8(resizedImage, 224);
+
+    return inputImage;
+  }
+
+// Converts an image to Uint8List format (RGB)
+  Uint8List _imageToByteListUint8(img.Image image, int inputSize) {
+    print('imagebyte function');
+
+    var convertedBytes = Uint8List(1 * inputSize * inputSize * 3);
+    var buffer = ByteData.view(convertedBytes.buffer);
+
+    int pixelIndex = 0;
+    for (int y = 0; y < inputSize; y++) {
+      for (int x = 0; x < inputSize; x++) {
+        int pixel = image.getPixel(x, y);
+        buffer.setUint8(pixelIndex++, img.getRed(pixel));
+        buffer.setUint8(pixelIndex++, img.getGreen(pixel));
+        buffer.setUint8(pixelIndex++, img.getBlue(pixel));
+      }
+    }
+
+    return convertedBytes;
+  }
+
+  // Future<Uint8List> _loadVideo(File videoFile) async {
+  //   // Load the video file as bytes
+  //   final Uint8List videoBytes = await videoFile.readAsBytes();
+
+  //   return videoBytes; // Return the video bytes directly
+  // }
 
   Future<Uint8List> _loadImage(File file) async {
     try {
@@ -439,16 +662,21 @@ class _ImageScreenState extends State<ImageScreen> {
                       }
                       // Switch the model based on the selected option
                       if (_isSelected[0]) {
+                        displayText =
+                            "Translate Asl gestures into text instantly.";
                         _modelPath =
-                            'assets/tensorflowModel/asl_words_model.tflite'; // Default model
+                            'assets/tensorflowModel/asl_alphabet_model.tflite'; // Default model
                         _videoModelPath =
-                            'assets/tensorflowModel/video_model.tflite'; // Video model
+                            'assets/tensorflowModel/asl_words_model.tflite'; // Video model
                         _loadModel();
+                        _loadVideoModel(); // Load the video model as well
                       } else {
+                        displayText =
+                            "Translate Auslan gestures into text instantly.";
                         _modelPath =
                             'assets/tensorflowModel/auslan_alphabet_model.tflite'; // New model
                         _videoModelPath =
-                            'assets/tensorflowModel/new_video_model.tflite'; // New video model
+                            'assets/tensorflowModel/auslan_test.tflite'; // New video model
                         _loadModel();
                         _loadVideoModel(); // Load the video model as well
                       }
@@ -476,46 +704,73 @@ class _ImageScreenState extends State<ImageScreen> {
                         child: Container(
                           height: 50.h,
                           width: 50.w,
-                          child: _image == null
-                              ? const Text('No Image selected')
-                              : Image.file(_image!),
+                          child: Image.file(_image!),
                         ),
                       ),
                       const SizedBox(height: 20),
                       Text(
                         _result,
                         style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
                 )
               else if (_video != null)
-                Column(
-                  children: [
-                    _videoController != null
-                        ? AspectRatio(
-                            aspectRatio: _videoController!.value.aspectRatio,
-                            child: VideoPlayer(_videoController!),
-                          )
-                        : const Text('No video selected'),
-                    const SizedBox(height: 20),
-                    Text(
-                      _result,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _videoController != null
+                          ? Column(
+                              children: [
+                                AspectRatio(
+                                  aspectRatio:
+                                      16 / 9, // Adjust aspect ratio as needed
+                                  child: VideoPlayer(_videoController!),
+                                ),
+                                VideoProgressIndicator(
+                                  _videoController!,
+                                  allowScrubbing: true,
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    _videoController!.value.isPlaying
+                                        ? Icons.pause
+                                        : Icons.play_arrow,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _videoController!.value.isPlaying
+                                          ? _videoController!.pause()
+                                          : _videoController!.play();
+                                    });
+                                  },
+                                ),
+                              ],
+                            )
+                          : const Text('No video selected'),
+                      const SizedBox(height: 20),
+                      Text(
+                        _result,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               else
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.all(35),
                       child: Text(
-                        'Translate Auslan gestures into text instantly.',
+                        displayText,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
@@ -571,7 +826,7 @@ class _ImageScreenState extends State<ImageScreen> {
                         onPressed: () {
                           captureFromCamera(context);
                         },
-                        child: const Text('Capture Video'),
+                        child: const Text('Capture from Camera'),
                       ),
                     ),
                   ],

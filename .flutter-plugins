@@ -1,6 +1,7 @@
 # This is a generated file; do not edit or check into version control.
 cloud_firestore=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\cloud_firestore-4.14.0\\
 cloud_firestore_web=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\cloud_firestore_web-3.9.0\\
+ffmpeg_kit_flutter=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\ffmpeg_kit_flutter-6.0.3\\
 file_selector_linux=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\file_selector_linux-0.9.3\\
 file_selector_macos=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\file_selector_macos-0.9.4+2\\
 file_selector_windows=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\file_selector_windows-0.9.3+3\\
@@ -16,8 +17,7 @@ image_picker_ios=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\
 image_picker_linux=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\image_picker_linux-0.2.1+1\\
 image_picker_macos=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\image_picker_macos-0.2.1+1\\
 image_picker_windows=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\image_picker_windows-0.2.1+1\\
-tflite=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\tflite-1.1.2\\
-tflite_flutter=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\tflite_flutter-0.10.4\\
+tflite_flutter=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\tflite_flutter-0.11.0\\
 video_player=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\video_player-2.9.1\\
 video_player_android=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\video_player_android-2.6.0\\
 video_player_avfoundation=C:\\Users\\Niazi\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\video_player_avfoundation-2.6.1\\
