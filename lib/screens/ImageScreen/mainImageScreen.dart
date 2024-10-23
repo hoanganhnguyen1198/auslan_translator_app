@@ -313,12 +313,7 @@ class _ImageScreenState extends State<ImageScreen> {
           final frameDataProcessed = _preprocessFrame(frameData);
 
           if (frameDataProcessed.isNotEmpty) {
-            print('here 11111');
-            print(frameDataProcessed.length.toString());
-            print('here 11111');
-
             _videoInterpreter?.run(frameDataProcessed, output);
-            print("here 1");
             allFrameOutputs.add(List<double>.from(output[0]));
           } else {
             print("Processed frame data is empty for frame $i.");
@@ -330,8 +325,6 @@ class _ImageScreenState extends State<ImageScreen> {
 
       // Check if frames were processed
       if (allFrameOutputs.isNotEmpty) {
-        print("here 3");
-
         // Average the probabilities across all frames
         final averagedOutput = List<double>.generate(labelCount, (i) => 0.0);
         for (var frameOutput in allFrameOutputs) {
@@ -392,7 +385,6 @@ class _ImageScreenState extends State<ImageScreen> {
   Future<void> _loadVideo(File videoFile) async {
     _videoController = VideoPlayerController.file(videoFile);
     await _videoController?.initialize();
-    print('load function');
 
     // Video duration and frame interval for extraction
     final duration = _videoController?.value.duration;
@@ -404,7 +396,6 @@ class _ImageScreenState extends State<ImageScreen> {
 
 // Extract a frame using FFmpeg
   Future<Uint8List> _extractFrame(File videoFile, int frameIndex) async {
-    print("extract function");
     print('Extracting frame $frameIndex from video ${videoFile.path}');
 
     final tempDir = Directory.systemTemp;
@@ -431,8 +422,6 @@ class _ImageScreenState extends State<ImageScreen> {
 
 // Preprocess the frame to fit the model's input requirements
   Uint8List _preprocessFrame(Uint8List frameData) {
-    print('process function');
-
     img.Image? originalImage = img.decodeImage(frameData);
 
     if (originalImage == null) {
@@ -448,8 +437,6 @@ class _ImageScreenState extends State<ImageScreen> {
 
 // Converts an image to Uint8List format (RGB)
   Uint8List _imageToByteListUint8(img.Image image, int inputSize) {
-    print('imagebyte function');
-
     var convertedBytes = Uint8List(1 * inputSize * inputSize * 3);
     var buffer = ByteData.view(convertedBytes.buffer);
 
